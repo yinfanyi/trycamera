@@ -12,7 +12,9 @@ int main(int argc, char **argv) try {
     std::shared_ptr<ob::DepthFrame> depthFrame;
     std::shared_ptr<ob::ColorFrame> colorFrame;
 
-    while(camera->app) {
+    cv::namedWindow("Image Window", cv::WINDOW_AUTOSIZE);
+
+    while(true) {
 
         auto frames_ = camera->receiveFrames();
 
@@ -22,11 +24,15 @@ int main(int argc, char **argv) try {
         colorFrame = frames_->colorFrame;
 
         if(depthFrame->index() % 30 == 0 && depthFrame->format() == OB_FORMAT_Y16) {
-            std::cout << camera->getDistance(320, 200) << std::endl;
+            auto distance = camera->getDistance(320, 200);
+            std::cout << distance.value() << std::endl;
         }
 
         // Render frame in the window
-        camera->app->addToRender({colorFrame, depthFrame});
+        // camera->app->addToRender({colorFrame, depthFrame});
+        
+        cv::imshow("Image Window", camera->colorImage);
+        cv::waitKey(1);
     }
     // Stop the pipeline
     camera->stop();

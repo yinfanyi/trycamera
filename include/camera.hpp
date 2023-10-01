@@ -35,7 +35,6 @@ private:
             exit(EXIT_FAILURE);
         }
 
-
         auto depthProfiles = pipe.getStreamProfileList(OB_SENSOR_DEPTH);
         if(depthProfiles) {
             depthProfile = std::const_pointer_cast<ob::StreamProfile>(depthProfiles->getProfile(0))->as<ob::VideoStreamProfile>();
@@ -51,6 +50,7 @@ public:
     uint32_t width = 640;
     uint32_t  height = 400;
     float scale = 1;
+    cv::Mat colorImage;
     static std::shared_ptr<Camera> getInstance() {
         static std::shared_ptr<Camera> instance(new Camera());
         return instance;
@@ -61,15 +61,32 @@ public:
         if(frameSet == nullptr) {
             return std::nullopt;
         }
+
         colorFrame = frameSet->colorFrame();
         depthFrame = frameSet->depthFrame();
+        
         colorAndDepthFrame frames_;
         frames_.colorFrame = colorFrame;
         frames_.depthFrame = depthFrame;
+
+        // std::cout<<"lala" <<colorFrame->format() << std::endl;
+        try{
+            cv::Mat rawMat(1, colorFrame->dataSize(), CV_8UC1, colorFrame->data());
+            colorImage = cv::imdecode(rawMat, 1);
+        }
+        catch(...) {
+            std::cerr << "Can't get colorImage!" << std::endl;
+        }
+
+        
+
         return frames_;
     }
 
     std::optional<float> getDistance(int u, int v){
+        auto _frames = receiveFrames();
+        if(_frames==std::nullopt){return std::nullopt;}
+        depthFrame = _frames->depthFrame;
         uint16_t *data = (uint16_t *)depthFrame->data();
         
         if (u > 0 && u < width && v > 0 && v < height) {
@@ -88,7 +105,7 @@ public:
         catch(ob::Error &e) {
             std::cerr << "function:" << e.getName() << "\nargs:" << e.getArgs() << "\nmessage:" << e.getMessage() << "\ntype:" << e.getExceptionType() << std::endl;
         }
-        app = std::make_shared<Window>("cameraWindow", colorProfile->width(), colorProfile->height(), RENDER_OVERLAY);
+        // app = std::make_shared<Window>("cameraWindow", colorProfile->width(), colorProfile->height(), RENDER_OVERLAY);
     }
 
     void stop(){
