@@ -1,0 +1,3 @@
+/home/yyfyyf/project/trycamera/build/CMakeFiles/camera.dir
+/home/yyfyyf/project/trycamera/build/CMakeFiles/edit_cache.dir
+/home/yyfyyf/project/trycamera/build/CMakeFiles/rebuild_cache.dir

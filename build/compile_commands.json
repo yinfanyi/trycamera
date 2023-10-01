@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/yyfyyf/project/trycamera/build",
+  "command": "/usr/bin/g++ -I/home/yyfyyf/project/trycamera/thirdParty/SDK/include -I/home/yyfyyf/project/trycamera/include -isystem /usr/include/opencv4 -std=c++17 -pthread  -O3 -DNDEBUG -o CMakeFiles/camera.dir/src/main.cpp.o -c /home/yyfyyf/project/trycamera/src/main.cpp",
+  "file": "/home/yyfyyf/project/trycamera/src/main.cpp"
+}
+]
