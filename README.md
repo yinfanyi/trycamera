@@ -20,5 +20,5 @@ auto distance = camera->getDistance(320, 200); //获取像素点320，200的深�
 camera->stop();
 ```
 
-TODO：有时会发生溢出错误，正在寻找原因
+TODO：有时或运行久了会发生错误：Segmentation fault（访问了无效的内存地址或者访问了未分配的内存导致），正在寻找出错的地方
 
