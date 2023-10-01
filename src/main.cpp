@@ -14,11 +14,12 @@ int main(int argc, char **argv) try {
 
     while(camera->app) {
 
-        auto frames = camera->receiveFrames();
-        depthFrame = frames->depthFrame;
-        colorFrame = frames->colorFrame;
+        auto frames_ = camera->receiveFrames();
 
-        if(depthFrame == nullptr || colorFrame == nullptr){continue;}
+        if(frames_==std::nullopt){continue;}
+
+        depthFrame = frames_->depthFrame;
+        colorFrame = frames_->colorFrame;
 
         if(depthFrame->index() % 30 == 0 && depthFrame->format() == OB_FORMAT_Y16) {
             std::cout << camera->getDistance(320, 200) << std::endl;

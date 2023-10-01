@@ -15,14 +15,12 @@ private:
     // static std::shared_ptr<Camera> instance;
     std::shared_ptr<ob::Config> config = std::make_shared<ob::Config>();
     ob::Pipeline pipe;
-    std::shared_ptr<ob::StreamProfileList> profiles;
     std::shared_ptr<ob::VideoStreamProfile> depthProfile = nullptr;
     std::shared_ptr<ob::VideoStreamProfile> colorProfile = nullptr;
     std::shared_ptr<ob::DepthFrame> depthFrame;
     std::shared_ptr<ob::ColorFrame> colorFrame;
     
     Camera() {
-        profiles = pipe.getStreamProfileList(OB_SENSOR_DEPTH);
 
         try {
             // Get all stream profiles of the color camera, including stream resolution, frame rate, and frame format
@@ -65,13 +63,13 @@ public:
         }
         colorFrame = frameSet->colorFrame();
         depthFrame = frameSet->depthFrame();
-        colorAndDepthFrame frames;
-        frames.colorFrame = colorFrame;
-        frames.depthFrame = depthFrame;
-        return frames;
+        colorAndDepthFrame frames_;
+        frames_.colorFrame = colorFrame;
+        frames_.depthFrame = depthFrame;
+        return frames_;
     }
 
-    float getDistance(int u, int v){
+    std::optional<float> getDistance(int u, int v){
         uint16_t *data = (uint16_t *)depthFrame->data();
         
         if (u > 0 && u < width && v > 0 && v < height) {
@@ -79,7 +77,7 @@ public:
         }
         else{
             std::cout<< "u or v out of pixels!"<< std::endl;
-            return -1;
+            return std::nullopt;
         }
     }
 
